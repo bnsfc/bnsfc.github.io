@@ -1415,12 +1415,13 @@ function renderSponsors() {
 }
 const slider = { i: 0, timer: null, paused: false, seen: new Set(), started: false };
 function renderGallery() {
-  const items = [...data.gallery].sort((a, b) => a.order - b.order), tr = $("#slideTrack");
+  const all = [...data.gallery].sort((a, b) => a.order - b.order), items = slidePicks(all), tr = $("#slideTrack");
   tr.innerHTML = items.map((g, i) => `<figure class="slide" aria-roledescription="slide" aria-label="${i + 1} dari ${items.length}">${img(g.image, "photo", g.title, g.title)}<figcaption>${esc(g.title)}</figcaption></figure>`).join("");
   $("#slideDots").innerHTML = items.map((_, i) => `<button type="button" aria-label="Foto ${i + 1}" data-dot="${i}"></button>`).join("");
   slider.n = items.length;
   if (!slider.started && slider.n) { slider.started = true; slider.i = Math.floor(Math.random() * slider.n); }  // foto pertama acak
   goSlide(Math.min(slider.i, items.length - 1), true); autoplay();
+  initGalleryAll(all);
 }
 function goSlide(i, quiet) {
   if (!slider.n) return; slider.i = (i + slider.n) % slider.n; slider.seen.add(slider.i);
@@ -1437,6 +1438,32 @@ function randomSlide() {
   let pool = [...Array(slider.n).keys()].filter(k => !slider.seen.has(k));
   if (!pool.length) { slider.seen = new Set([slider.i]); pool = [...Array(slider.n).keys()].filter(k => k !== slider.i); }
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// Galeri berisi banyak foto: slider hanya memuat GAL.max foto acak, sisanya lewat tombol "Lihat semua foto" (grid, dimuat bertahap).
+const GAL = { max: 12, page: 24, all: [], shown: 0, pick: null, key: "" };
+function shuffle(a) { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function slidePicks(all) {
+  const key = all.map(g => g.image).join("|");
+  if (GAL.key !== key) { GAL.key = key; GAL.pick = all.length > GAL.max ? shuffle(all).slice(0, GAL.max) : all; }
+  return GAL.pick;
+}
+function initGalleryAll(all) {
+  GAL.all = all; GAL.shown = 0; $("#galGrid").innerHTML = "";
+  const btn = $("#galOpen");
+  btn.hidden = all.length <= GAL.max; btn.setAttribute("aria-expanded", "false");
+  btn.textContent = `Lihat semua foto (${all.length})`; $("#galAll").hidden = true; $("#galLoad").hidden = false;
+}
+function toggleGalleryAll() {
+  const btn = $("#galOpen"), box = $("#galAll"), open = box.hidden;
+  box.hidden = !open; btn.setAttribute("aria-expanded", String(open));
+  btn.textContent = open ? "Tutup semua foto" : `Lihat semua foto (${GAL.all.length})`;
+  if (open && !GAL.shown) loadGalleryMore();
+}
+function loadGalleryMore() {
+  const end = Math.min(GAL.shown + GAL.page, GAL.all.length);
+  $("#galGrid").insertAdjacentHTML("beforeend", GAL.all.slice(GAL.shown, end).map(g => `<figure class="gal-tile">${img(g.image, "photo", g.title, g.title)}<figcaption>${esc(g.title)}</figcaption></figure>`).join(""));
+  GAL.shown = end; $("#galLoad").hidden = end >= GAL.all.length;
 }
 
 /* ---------- Ajakan bertanding -> WhatsApp ---------- */
@@ -1481,14 +1508,19 @@ document.addEventListener("click", e => {
   else if ((el = c(".sz"))) { const id = el.closest(".prod").dataset.id; shopState.size[id] = shopState.size[id] === el.dataset.size ? "" : el.dataset.size; renderShop(); }
   else if ((el = c("[data-order]"))) orderProduct(el.dataset.order);
   else if ((el = c("[data-dot]"))) goSlide(+el.dataset.dot);
+  else if (c("#galOpen")) toggleGalleryAll();
+  else if (c("#galLoad")) loadGalleryMore();
   else if (c("#slidePrev")) goSlide(slider.i - 1);
   else if (c("#slideNext")) goSlide(slider.i + 1);
 });
 $("#mcPick").addEventListener("change", e => { mc.id = e.target.value; renderCenter(); });
 $("#shopSort").addEventListener("change", e => { shopState.sort = e.target.value; renderShop(); });
 const sv = $("#slider");
-["mouseenter", "focusin"].forEach(ev => sv.addEventListener(ev, () => slider.paused = true));
-["mouseleave", "focusout"].forEach(ev => sv.addEventListener(ev, () => slider.paused = false));
+// Berhenti sementara hanya untuk kursor mouse dan fokus keyboard; sentuhan di layar HP tidak menghentikan slide.
+sv.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") slider.paused = true; });
+sv.addEventListener("pointerleave", () => slider.paused = false);
+sv.addEventListener("focusin", e => { if (e.target.matches(":focus-visible")) slider.paused = true; });
+sv.addEventListener("focusout", () => slider.paused = false);
 let sx = null;
 sv.addEventListener("pointerdown", e => { sx = e.clientX; });
 sv.addEventListener("pointerup", e => { if (sx !== null && Math.abs(e.clientX - sx) > 40) goSlide(slider.i + (e.clientX < sx ? 1 : -1)); sx = null; });
