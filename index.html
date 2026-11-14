@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050507">
+  <meta name="description" content="Situs resmi BNS Football Club.">
+  <title>BNS Football Club — Situs Resmi</title>
+  <!-- Favicon & logo diganti otomatis dari tab settings (favicon_url, logo_url). Baris ini hanya cadangan. -->
+  <link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M6 6h88v56c0 28-22 42-44 52C28 104 6 90 6 62z' fill='%23050507'/%3E%3Cpath d='M14 14h72v48c0 22-16 34-36 42-20-8-36-20-36-42z' fill='%232250F5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Lewati ke konten</a>
+
+  <header class="hdr">
+    <div class="wrap hdr-in">
+      <a class="brand" href="#beranda" aria-label="Beranda">
+        <span class="brand-logo" data-logo></span>
+        <span class="brand-tx"><strong data-short>BNS FC</strong><small data-est></small></span>
+      </a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+      <nav class="nav" id="nav" aria-label="Navigasi utama">
+        <a href="#jadwal">Jadwal</a><a href="#match-center">Match center</a><a href="#statistik">Statistik</a>
+        <a href="#skuad">Skuad</a><a href="#toko">Jersey</a><a href="#galeri">Galeri</a><a href="#sponsor">Sponsor</a>
+        <a class="btn btn-blue nav-cta" href="#ajak">Ajak bertanding</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <h1 class="sr" data-club>BNS Football Club</h1>
+
+    <section class="hero" id="beranda">
+      <span class="hero-wm" data-logo aria-hidden="true"></span>
+      <div class="wrap hero-in">
+        <div class="hero-copy">
+          <p class="hero-name" data-club>BNS FOOTBALL CLUB</p>
+          <p class="hero-tag" id="tagline"></p>
+          <div class="hero-act">
+            <a class="btn btn-blue" href="#ajak">Ajak bertanding</a>
+            <a class="btn btn-ghost" href="#jadwal">Lihat jadwal</a>
+          </div>
+          <p class="hero-rec" id="recordLine"></p>
+        </div>
+        <div class="next" id="nextMatch" aria-label="Pertandingan berikutnya"></div>
+      </div>
+    </section>
+
+    <section class="sec" id="jadwal">
+      <div class="wrap">
+        <header class="sec-head"><h2>Jadwal dan hasil</h2><p>Tarkam, trofeo, dan laga persahabatan BNS FC musim ini.</p></header>
+        <div class="toolbar">
+          <div class="seg-tabs" id="schedTabs" role="tablist" aria-label="Jenis daftar">
+            <button type="button" role="tab" class="on" data-tab="upcoming" aria-selected="true">Mendatang</button>
+            <button type="button" role="tab" data-tab="results" aria-selected="false">Hasil</button>
+          </div>
+          <div class="pills" id="catFilter" role="group" aria-label="Kategori laga"></div>
+        </div>
+        <div class="mlist" id="matchList" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="sec sec-dark" id="match-center">
+      <div class="wrap">
+        <header class="sec-head"><h2>Match center</h2><p>Pilih laga untuk melihat skor, susunan pemain kedua tim, dan cadangan.</p></header>
+        <div class="mc">
+          <label class="mc-pick"><span class="sr">Pilih pertandingan</span><select id="mcPick"></select></label>
+          <div class="mc-tabs" id="mcTabs" role="tablist" aria-label="Detail pertandingan">
+            <button type="button" role="tab" class="on" data-mc="info" aria-selected="true">Informasi umum</button>
+            <button type="button" role="tab" data-mc="lineup" aria-selected="false">Susunan pemain</button>
+            <button type="button" role="tab" data-mc="subs" aria-selected="false">Cadangan</button>
+          </div>
+          <div class="mc-body" id="mcBody" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="statistik">
+      <div class="wrap">
+        <header class="sec-head"><h2>Performa tim</h2><p>Dihitung otomatis dari seluruh hasil pertandingan di semua kompetisi.</p></header>
+        <div class="stat-grid" id="statCards"></div>
+        <div class="two">
+          <div class="card">
+            <h3 class="card-h">Lima laga terakhir</h3>
+            <div class="form" id="formRow"></div>
+            <h3 class="card-h">Per jenis kompetisi</h3>
+            <div id="catStats"></div>
+            <p class="leg"><i class="sw"></i> menang <i class="sd"></i> seri <i class="sl"></i> kalah</p>
+          </div>
+          <div class="card">
+            <h3 class="card-h">Top skor dan assist</h3>
+            <ol class="top" id="topList"></ol>
+          </div>
+        </div>
+        <div class="card card-honor">
+          <h3 class="card-h">Prestasi</h3>
+          <ul class="honors" id="honorList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec-mist" id="skuad">
+      <div class="wrap">
+        <header class="sec-head"><h2>Skuad utama</h2><p>Nomor punggung, posisi, dan catatan gol pemain.</p></header>
+        <div class="pills pills-c" role="group" aria-label="Filter posisi">
+          <button type="button" class="pill on" data-pos="all">Semua</button>
+          <button type="button" class="pill" data-pos="Kiper">Kiper</button>
+          <button type="button" class="pill" data-pos="Bek">Bek</button>
+          <button type="button" class="pill" data-pos="Gelandang">Gelandang</button>
+          <button type="button" class="pill" data-pos="Penyerang">Penyerang</button>
+        </div>
+        <div class="squad" id="squadGrid" aria-live="polite"></div>
+
+        <header class="sec-head sec-head-sub"><h2>Manajemen</h2></header>
+        <div class="mgmt" id="mgmtGrid"></div>
+      </div>
+    </section>
+
+    <section class="sec" id="toko">
+      <div class="wrap">
+        <header class="sec-head"><h2>Jersey dan merchandise</h2><p>Pilih ukuran, lalu pesan langsung lewat WhatsApp admin.</p></header>
+        <div class="toolbar toolbar-shop">
+          <div class="pills" id="shopCats" role="group" aria-label="Kategori produk"></div>
+          <label class="sort"><span>Urutkan</span>
+            <select id="shopSort"><option value="default">Rekomendasi</option><option value="low">Harga terendah</option><option value="high">Harga tertinggi</option></select>
+          </label>
+        </div>
+        <div class="shop" id="shopGrid"></div>
+      </div>
+    </section>
+
+    <section class="sec sec-mist" id="galeri">
+      <div class="wrap">
+        <header class="sec-head"><h2>Galeri</h2><p>Momen pertandingan dan latihan.</p></header>
+        <div class="slider" id="slider" role="region" aria-roledescription="carousel" aria-label="Galeri foto" tabindex="0">
+          <div class="slides"><div class="track" id="slideTrack"></div></div>
+          <button type="button" class="arrow arrow-l" id="slidePrev" aria-label="Foto sebelumnya">&#8249;</button>
+          <button type="button" class="arrow arrow-r" id="slideNext" aria-label="Foto berikutnya">&#8250;</button>
+          <div class="dots" id="slideDots"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="sponsor">
+      <div class="wrap">
+        <header class="sec-head"><h2>Sponsor dan mitra</h2><p>Terima kasih kepada pihak yang mendukung BNS FC.</p></header>
+        <div class="sponsors" id="sponsorGrid"></div>
+      </div>
+    </section>
+
+    <section class="sec sec-blue" id="ajak">
+      <div class="wrap invite">
+        <div class="invite-copy">
+          <h2>Mau menjajal BNS FC di lapangan?</h2>
+          <p>Kirim ajakan laga persahabatan, undangan trofeo, atau turnamen kampung. Isi formulir, pesan akan tersusun otomatis dan terbuka di WhatsApp admin.</p>
+          <a class="btn btn-white" data-wa href="#" target="_blank" rel="noopener">Chat WhatsApp langsung</a>
+        </div>
+        <form class="card form-card" id="inviteForm" novalidate>
+          <div class="f2">
+            <label>Nama tim / penyelenggara<input name="tim" required autocomplete="organization"></label>
+            <label>Nama narahubung<input name="nama" required autocomplete="name"></label>
+          </div>
+          <div class="f2">
+            <label>Jenis laga
+              <select name="jenis" required><option>Persahabatan</option><option>Trofeo</option><option>Tarkam / turnamen kampung</option><option>Lainnya</option></select>
+            </label>
+            <label>Tanggal usulan<input type="date" name="tgl" id="tgl"></label>
+          </div>
+          <div class="f2">
+            <label>Jam mulai<input type="time" name="jam"></label>
+            <label>Jam selesai<input type="time" name="jam_selesai"></label>
+          </div>
+          <label>Lokasi usulan<input name="lokasi" placeholder="Nama lapangan / desa"></label>
+          <label>Catatan<textarea name="catatan" rows="3" placeholder="Contoh: jumlah pemain, hadiah, aturan main"></textarea></label>
+          <button class="btn btn-blue btn-block" type="submit">Kirim lewat WhatsApp</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ftr">
+    <div class="wrap ftr-in">
+      <div class="ftr-brand">
+        <span class="brand-logo brand-logo-lg" data-logo></span>
+        <div><strong data-club>BNS FOOTBALL CLUB</strong><p>Dari Rongga, Bandung Barat, untuk semua lapangan.</p></div>
+      </div>
+      <div class="ftr-col"><h3>Kontak</h3>
+        <p id="footAddress"></p>
+        <p><a id="footEmail" href="#"></a></p>
+        <p><a id="footPhone" href="#"></a></p>
+      </div>
+      <div class="ftr-col"><h3>Media sosial</h3><div class="socials" id="socials"></div></div>
+    </div>
+    <div class="wrap ftr-bot"><span>&copy; <span id="year">2026</span> <span data-club>BNS Football Club</span>. Hak cipta dilindungi.</span></div>
+  </footer>
+</body>
+</html>
